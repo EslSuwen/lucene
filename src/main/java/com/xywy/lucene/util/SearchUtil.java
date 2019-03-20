@@ -1,22 +1,20 @@
 package com.xywy.lucene.util;
 
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.MultiReader;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.FSDirectory;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
-
-import org.apache.lucene.document.Document;
-import org.apache.lucene.index.DirectoryReader;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.MultiReader;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
-import org.apache.lucene.search.TopDocs;
-import org.apache.lucene.search.BooleanClause.Occur;
-import org.apache.lucene.store.FSDirectory;
 
 /**lucene索引查询工具类
  * @author lenovo
@@ -24,12 +22,11 @@ import org.apache.lucene.store.FSDirectory;
  */
 public class SearchUtil {
     /**获取IndexSearcher对象
-     * @param indexPath
      * @param service
      * @return
      * @throws IOException
      */
-    public static IndexSearcher getIndexSearcherByParentPath(String parentPath,ExecutorService service) throws IOException{
+    public static IndexSearcher getIndexSearcherByParentPath(String parentPath,ExecutorService service) {
         MultiReader reader = null;
         //设置
         try {
@@ -40,7 +37,6 @@ public class SearchUtil {
             }
             reader = new MultiReader(readers);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return new IndexSearcher(reader,service);

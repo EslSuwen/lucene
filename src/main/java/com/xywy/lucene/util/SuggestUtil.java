@@ -1,11 +1,6 @@
 package com.xywy.lucene.util;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.nio.file.Paths;
-
 import com.xywy.lucene.lucene.IKAnalyzer;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.IndexWriterConfig;
@@ -14,6 +9,9 @@ import org.apache.lucene.search.spell.SpellChecker;
 import org.apache.lucene.search.suggest.FileDictionary;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+
+import java.io.IOException;
+import java.nio.file.Paths;
 
 
 public class SuggestUtil {
@@ -36,10 +34,7 @@ public class SuggestUtil {
             spellIndexDirectory.close();
             spellchecker.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-
     }
 }

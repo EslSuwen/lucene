@@ -80,7 +80,6 @@ public class IndexDataBase {
             //释放线程池资源
             pool.shutdown();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 

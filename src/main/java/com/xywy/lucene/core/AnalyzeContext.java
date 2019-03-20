@@ -29,6 +29,7 @@ import com.xywy.lucene.cfg.Configuration;
 import java.io.IOException;
 import java.io.Reader;
 import com.xywy.lucene.dic.Dictionary;
+
 import java.util.*;
 
 /**
