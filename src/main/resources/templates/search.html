@@ -168,6 +168,7 @@
                 var productName= d.title;
                 var productDesc = d.summary;
                 var author = "百度百科";
+                var score = d.score;
                 // var content = "";
                 var id= d.id;
                 // 1、标题
@@ -181,7 +182,7 @@
                 // 2、内容
                 template.find("#content").html(productDesc);
                 // 3、作者
-                if (author != '' && author != undefined) template.find("#author").html("作者：" + author);
+                if (author != '' && author != undefined) template.find("#author").html("相关度得分：" + score);
                 // template.find("#createTime").text(d.createTime);
                 template.show();
                 var html = template.html().replace(new RegExp('undefined', 'gm'), '')

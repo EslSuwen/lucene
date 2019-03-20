@@ -54,7 +54,6 @@ public abstract class BaseIndex<T> implements Runnable{
             }
             this.writer = IndexUtil.getIndexWriter(parentIndexPath+"/index"+subIndex, true);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         };
         this.subIndex = subIndex;
@@ -73,7 +72,6 @@ public abstract class BaseIndex<T> implements Runnable{
             }
             this.writer = IndexUtil.getIndexWriter(path,true);
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         };
         this.countDownLatch1 = countDownLatch1;
@@ -105,10 +103,8 @@ public abstract class BaseIndex<T> implements Runnable{
             System.out.println(writer);
             indexDocs(writer,list);
         } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }finally{
             countDownLatch2.countDown();
@@ -116,7 +112,6 @@ public abstract class BaseIndex<T> implements Runnable{
                 writer.commit();
                 writer.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 

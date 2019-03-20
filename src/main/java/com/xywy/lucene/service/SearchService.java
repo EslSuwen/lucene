@@ -65,21 +65,27 @@ public class SearchService {
             //释放线程池资源
             pool.shutdown();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
     }
 
-    //搜索
+    /**
+     * 搜索
+     * @param value
+     * @return
+     * @throws Exception
+     */
     public List<Map> search(String value) throws Exception{
-        List<Map> list=new ArrayList<Map>();
+        List<Map> list=new ArrayList<>();
         ExecutorService service = Executors.newCachedThreadPool();
+        // TODO 2 定义分词器
         //定义分词器
         Analyzer analyzer = new IKAnalyzer();
         try {
             IndexSearcher searcher = SearchUtil.getIndexSearcherByParentPath(indexPath,service);
             String[] fields = {"title","summary"};
+            // TODO 3 构造Query对象
             // 构造Query对象
             MultiFieldQueryParser parser = new MultiFieldQueryParser(fields,analyzer);
 
@@ -94,12 +100,15 @@ public class SearchService {
             Highlighter highlighter = new Highlighter(htmlFormatter, new QueryScorer(query));
 
             //获取搜索的结果，指定返回document返回的个数
+            //默认搜索结果为显示第一页，1000 条，可以优化
+            // TODO 4 执行查询
             TopDocs results = SearchUtil.getScoreDocsByPerPage(1, 1000, searcher, query);
             ScoreDoc[] hits = results.scoreDocs;
 
             //遍历，输出
             for (int i = 0; i < hits.length; i++) {
                 int id = hits[i].doc;
+                float score = hits[i].score;
                 Document hitDoc = searcher.doc(hits[i].doc);
                 Map map=new HashMap();
                 map.put("id", hitDoc.get("id"));
@@ -112,8 +121,8 @@ public class SearchService {
                 TextFragment[] frag = highlighter.getBestTextFragments(tokenStream, name, false, 10);
                 String baikeValue="";
                 for (int j = 0; j < frag.length; j++) {
-//                if ((frag[j] != null) && (frag[j].getScore() > 0)) {
-                    if ((frag[j] != null)) {
+                if ((frag[j] != null) && (frag[j].getScore() > 0)) {
+//                    if ((frag[j] != null)) {
                         //获取 summary 的值
                         baikeValue=baikeValue+((frag[j].toString()));
                     }
@@ -131,10 +140,10 @@ public class SearchService {
                 }
                 map.put("title", titleValue);
                 map.put("summary", baikeValue);
+                map.put("score",score);
                 list.add(map);
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }finally{
             service.shutdownNow();

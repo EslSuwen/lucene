@@ -67,7 +67,7 @@ public class LuceneIndexAndSearchDemo {
         //Lucene Document的域名
         String fieldName = "text";
         //检索内容
-        String text = "IK Analyzer是一个结合词典分词和文法分词的中文分词全文搜索开源工具包。它使用了全新的正向迭代最细粒度切分算法。";
+        String text = "天皇万岁IK Analyzer是一个结合词典分词和文法分词的中文分词全文搜索开源工具包。它使用了全新的正向迭代最细粒度切分算法。";
 
         //实例化IKAnalyzer分词器
         Analyzer analyzer = new IKAnalyzer(true);

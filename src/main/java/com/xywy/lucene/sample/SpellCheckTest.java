@@ -30,7 +30,6 @@ public class SpellCheckTest {
             indexWriter.commit();
             indexWriter.close();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
