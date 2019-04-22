@@ -30,9 +30,9 @@ Lucene的目的是为软件开发人员提供一个简单易用的工具包，�
 - 1、修改[config.yml](https://github.com/suxiongwei/lucene/tree/master/src/main/resources/config.yml)文件，修改索引生成的目录
 - 2、开启MySQL服务
 - 3、启动服务：Run SearchApp
-- 4、生成索引：访问http://localhost:8080/createIndex?limit=10000&offset=0
+- 4、生成索引：访问http://localhost:8080/index?limit=10000&offset=0
 ```
-    @GetMapping("/createIndex")
+    @GetMapping("/index")
     public String createIndex(int limit,int offset) {
         // 拉取数据
         List<Baike> baikes = baikeMapper.getAllBaike(limit,offset);
