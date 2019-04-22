@@ -23,7 +23,6 @@ public class SearchController {
     @Autowired private SearchService searchService;
 
 
-    // TODO 从数据库中拉取数据来创建索引
     @GetMapping("/index")
     public String createIndex(int limit,int offset) {
         // 拉取数据
@@ -38,7 +37,6 @@ public class SearchController {
      * @return
      * @throws Exception
      */
-    // TODO 1 执行搜索
     @GetMapping("search/{q}")
     public List<Map> getSearchText(@PathVariable String q) throws Exception {
         List<Map> mapList = searchService.search(q);

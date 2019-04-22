@@ -36,24 +36,7 @@ Lucene的目的是为软件开发人员提供一个简单易用的工具包，�
     public String createIndex(int limit,int offset) {
         // 拉取数据
         List<Baike> baikes = baikeMapper.getAllBaike(limit,offset);
-        Baike baike = new Baike();
-        //获取字段
-        for (int i = 0; i < baikes.size(); i++) {
-            //获取每行数据
-            baike = baikes.get(i);
-            //创建Document对象
-            Document doc = new Document();
-            //获取每列数据
-            Field id = new Field("id", baike.getId()+"", TextField.TYPE_STORED);
-            Field title = new Field("title", baike.getTitle(), TextField.TYPE_STORED);
-            Field summary = new Field("summary", baike.getSummary(), TextField.TYPE_STORED);
-            //添加到Document中
-            doc.add(id);
-            doc.add(title);
-            doc.add(summary);
-            //调用，创建索引库
-            indexDataBase.write(doc);
-        }
+        seargitchService.write(baikes);
         return "成功";
     }
 ```

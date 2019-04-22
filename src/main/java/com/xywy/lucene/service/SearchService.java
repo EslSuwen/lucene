@@ -79,13 +79,11 @@ public class SearchService {
     public List<Map> search(String value) throws Exception{
         List<Map> list=new ArrayList<>();
         ExecutorService service = Executors.newCachedThreadPool();
-        // TODO 2 定义分词器
         //定义分词器
         Analyzer analyzer = new IKAnalyzer();
         try {
             IndexSearcher searcher = SearchUtil.getIndexSearcherByParentPath(indexPath,service);
             String[] fields = {"title","summary"};
-            // TODO 3 构造Query对象
             // 构造Query对象
             MultiFieldQueryParser parser = new MultiFieldQueryParser(fields,analyzer);
 
@@ -101,8 +99,7 @@ public class SearchService {
 
             //获取搜索的结果，指定返回document返回的个数
             //默认搜索结果为显示第一页，1000 条，可以优化
-            // TODO 4 执行查询
-            TopDocs results = SearchUtil.getScoreDocsByPerPage(1, 1000, searcher, query);
+            TopDocs results = SearchUtil.getScoreDocsByPerPage(1, 100, searcher, query);
             ScoreDoc[] hits = results.scoreDocs;
 
             //遍历，输出
