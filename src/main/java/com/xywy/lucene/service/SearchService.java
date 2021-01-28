@@ -13,8 +13,6 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.highlight.*;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -30,11 +28,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
-@PropertySource(value = "classpath:config.yml")//配置文件路径
 public class SearchService {
-    //Lucene索引文件路径
-    @Value("${indexPath}")
-    private String indexPath;
+    /** Lucene索引文件路径 */
+    private String indexPath = System.getProperty("user.dir") + "/index";
+
     /**
      * 封裝一个方法，用于将数据库中的数据解析为一个个关键字词存储到索引文件中
      * @param baikes
@@ -50,7 +47,7 @@ public class SearchService {
 
             for(int i = 0; i < threadCount; i++) {
                 int start = i*perThreadCount;
-                int end = (i+1) * perThreadCount < totalCount ? (i+1) * perThreadCount : totalCount;
+                int end = Math.min((i + 1) * perThreadCount, totalCount);
                 List<Baike> subList = baikes.subList(start, end);
                 Runnable runnable = new BaiKeBeanIndex("index",i, countDownLatch1, countDownLatch2, subList);
                 //子线程交给线程池管理
@@ -103,41 +100,41 @@ public class SearchService {
             ScoreDoc[] hits = results.scoreDocs;
 
             //遍历，输出
-            for (int i = 0; i < hits.length; i++) {
-                int id = hits[i].doc;
-                float score = hits[i].score;
-                Document hitDoc = searcher.doc(hits[i].doc);
-                Map map=new HashMap();
+            for (ScoreDoc hit : hits) {
+                int id = hit.doc;
+                float score = hit.score;
+                Document hitDoc = searcher.doc(hit.doc);
+                Map<String,String> map = new HashMap<>();
                 map.put("id", hitDoc.get("id"));
 
                 //获取到summary
-                String name=hitDoc.get("summary");
+                String name = hitDoc.get("summary");
                 //将查询的词和搜索词匹配，匹配到添加前缀和后缀
                 TokenStream tokenStream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), id, "summary", analyzer);
                 //传入的第二个参数是查询的值
                 TextFragment[] frag = highlighter.getBestTextFragments(tokenStream, name, false, 10);
-                String baikeValue="";
-                for (int j = 0; j < frag.length; j++) {
-                if ((frag[j] != null) && (frag[j].getScore() > 0)) {
+                StringBuilder baikeValue = new StringBuilder();
+                for (TextFragment textFragment : frag) {
+                    if ((textFragment != null) && (textFragment.getScore() > 0)) {
 //                    if ((frag[j] != null)) {
                         //获取 summary 的值
-                        baikeValue=baikeValue+((frag[j].toString()));
+                        baikeValue.append(textFragment.toString());
                     }
                 }
 
                 //获取到title
-                String title=hitDoc.get("title");
+                String title = hitDoc.get("title");
                 TokenStream titleTokenStream = TokenSources.getAnyTokenStream(searcher.getIndexReader(), id, "title", analyzer);
                 TextFragment[] titleFrag = highlighter.getBestTextFragments(titleTokenStream, title, false, 10);
-                String titleValue="";
+                String titleValue = "";
                 for (int j = 0; j < titleFrag.length; j++) {
                     if ((frag[j] != null)) {
-                        titleValue=titleValue+((titleFrag[j].toString()));
+                        titleValue = titleValue + ((titleFrag[j].toString()));
                     }
                 }
                 map.put("title", titleValue);
-                map.put("summary", baikeValue);
-                map.put("score",score);
+                map.put("summary", baikeValue.toString());
+                map.put("score", String.valueOf(score));
                 list.add(map);
             }
         } catch (IOException e) {

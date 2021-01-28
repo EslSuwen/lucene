@@ -42,7 +42,6 @@ import java.util.Properties;
  *
  */
 @Component
-@PropertySource(value = "classpath:config.yml")//配置文件路径
 public class DefaultConfig implements Configuration {
 
   /*
